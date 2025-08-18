@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transformer-Based Decoder Designs for Semantic Segmentation</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='16'>🛰️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4f7fa;
+      color: #222;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    header {
+      background: #000;
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.4em;
+    }
+
+    header p {
+      margin: 10px 0 0;
+      font-size: 1.1em;
+      color: #bbb;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    section {
+      margin-bottom: 60px;
+    }
+
+    h2 {
+      color: #1d3557;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .text-block {
+      font-size: 1.05em;
+      line-height: 1.7;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #1d3557;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .button:hover {
+      background: #457b9d;
+    }
+
+    img {
+      width: 100%;
+      max-width: 800px;
+      display: block;
+      margin: 20px auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    pre {
+      background: #eee;
+      padding: 15px;
+      overflow-x: auto;
+      border-radius: 6px;
+    }
+
+    ul {
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      background: #1d3557;
+      color: white;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    footer a {
+      color: #f1faee;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Transformer-Based Decoder Designs</h1>
+    <p>Semantic Segmentation on Remotely Sensed Imagery</p>
+    <p><strong>Teerapong Panboonyuen</strong></p>
+  </header>
+
+  <div class="container">
+    <section>
+      <h2>Overview</h2>
+      <div class="text-block">
+        <p>This work introduces novel decoder designs within the Transformer-based Swin architecture, tailored for semantic segmentation tasks in high-resolution remote sensing images. By enhancing global contextual understanding and preserving fine-grained spatial detail, our methods outperform conventional CNN-based decoders on multiple aerial benchmarks.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Architectures</h2>
+      <img src="images/pm1.png" alt="Architecture Diagram 1">
+      <img src="images/pm2.png" alt="Architecture Diagram 2">
+    </section>
+
+    <section>
+      <h2>Pretrained Checkpoints</h2>
+      <ul>
+        <li><a href="https://drive.google.com/open?id=1J7YClrBRlm9Oo8c8Xq621N_J0B_RYW2d" target="_blank">SwinTF-FPN – ISPRS Vaihingen</a></li>
+        <li><a href="https://drive.google.com/open?id=1kWWoQwSZx73e_lWElNT2Yebax4xU5FmB" target="_blank">SwinTF-PSP – Isan (Thailand)</a></li>
+        <li><a href="https://drive.google.com/open?id=1WtqrrIC4-_5aQwMsUqgpjZQ3Kyk4t1PK" target="_blank">SwinTF-PSP – North (Thailand)</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Dataset Structure</h2>
+      <pre>
+corpus_name/
+├── train/
+├── train_labels/
+├── val/
+├── val_labels/
+├── test/
+├── test_labels/
+      </pre>
+      <p>Include <code>our_class_dict.csv</code> to map class names to RGB colors.</p>
+      <pre>
+name,r,g,b
+Agriculture,255,255,155
+Forest,56,168,0
+Urban,255,0,0
+Water,0,122,255
+Miscellaneous,183,140,31
+      </pre>
+    </section>
+
+    <section>
+      <h2>Sample Results</h2>
+      <img src="images/rs_isan.png" alt="Result Isan">
+      <img src="images/rs_north.png" alt="Result North">
+      <img src="images/rs_isprs.png" alt="Result ISPRS Vaihingen">
+    </section>
+
+    <section>
+      <h2>Installation & Usage</h2>
+      <pre>
+# Install dependencies
+pip install tensorflow opencv-python
+
+# Train model
+python train.py --dataset corpus_name --model swin_decoder
+
+# Test model
+python test.py --dataset corpus_name
+      </pre>
+      <a href="https://www.tensorflow.org/install/gpu" class="button" target="_blank">TensorFlow GPU Setup</a>
+    </section>
+
+    <section>
+      <h2>Related Publications</h2>
+      <ul>
+        <li><a href="https://doi.org/10.3390/rs12081233" target="_blank">Feature Fusion + Depthwise Atrous Convolution (Remote Sens, 2020)</a></li>
+        <li><a href="https://doi.org/10.3390/rs11010083" target="_blank">GloConvNet + Channel Attention (Remote Sens, 2019)</a></li>
+        <li><a href="https://doi.org/10.3390/rs9070680" target="_blank">Road Segmentation with CRFs (Remote Sens, 2017)</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Citation</h2>
+      <pre>
+@article{panboonyuen2025transformer,
+  title={Transformer-Based Decoder Designs for Semantic Segmentation on Remotely Sensed Images},
+  author={Panboonyuen, Teerapong},
+  journal={Remote Sensing Letters},
+  year={2025},
+  note={Under review}
+}
+      </pre>
+    </section>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Teerapong Panboonyuen · <a href="mailto:panboonyuen.kao@gmail.com">Contact</a>
+  </footer>
+
+</body>
+</html>
