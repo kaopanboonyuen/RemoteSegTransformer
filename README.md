@@ -1,168 +1,179 @@
 # Transformer-Based Decoder Designs for Semantic Segmentation on Remotely Sensed Images
 
-Author: Teerapong Panboonyuen
+**Author:** Teerapong Panboonyuen
 
-Our previous works: 
+---
 
+## Overview
 
-[1] Panboonyuen, T.; Jitkajornwanich, K.; Lawawirojwong, S.; Srestasathiern, P.; Vateekul, P. Semantic Labeling in Remote Sensing Corpora Using Feature Fusion-Based Enhanced Global Convolutional Network with High-Resolution Representations and Depthwise Atrous Convolution. Remote Sens. 2020, 12, 1233. https://doi.org/10.3390/rs12081233
+This repository presents cutting-edge decoder architectures integrated with Transformer networks for semantic segmentation of remotely sensed images. Building upon my prior research in remote sensing and deep learning, this work explores novel decoder designs that significantly enhance segmentation accuracy and robustness.
 
-[2] Panboonyuen, T.; Jitkajornwanich, K.; Lawawirojwong, S.; Srestasathiern, P.; Vateekul, P. Semantic Segmentation on Remotely Sensed Images Using an Enhanced Global Convolutional Network with Channel Attention and Domain Specific Transfer Learning. Remote Sens. 2019, 11, 83. https://doi.org/10.3390/rs11010083
+---
 
-[3] Panboonyuen, T.; Jitkajornwanich, K.; Lawawirojwong, S.; Srestasathiern, P.; Vateekul, P. Road Segmentation of Remotely-Sensed Images Using Deep Convolutional Neural Networks with Landscape Metrics and Conditional Random Fields. Remote Sens. 2017, 9, 680. https://doi.org/10.3390/rs9070680
+## Previous Works
 
-** This work presents an alternative perspective for semantic segmentation by introducing decoder designs to the Transformer network. 
+I have contributed extensively to semantic segmentation in remote sensing, including:
+
+1. **Semantic Labeling in Remote Sensing Corpora Using Feature Fusion-Based Enhanced Global Convolutional Network with High-Resolution Representations and Depthwise Atrous Convolution**
+   *Remote Sens.*, 2020, 12, 1233
+   [DOI](https://doi.org/10.3390/rs12081233)
+
+2. **Semantic Segmentation on Remotely Sensed Images Using an Enhanced Global Convolutional Network with Channel Attention and Domain Specific Transfer Learning**
+   *Remote Sens.*, 2019, 11, 83
+   [DOI](https://doi.org/10.3390/rs11010083)
+
+3. **Road Segmentation of Remotely-Sensed Images Using Deep Convolutional Neural Networks with Landscape Metrics and Conditional Random Fields**
+   *Remote Sens.*, 2017, 9, 680
+   [DOI](https://doi.org/10.3390/rs9070680)
+
+---
+
+## Key Contributions
+
+* Introduced novel Transformer decoder designs tailored for semantic segmentation tasks in remote sensing.
+* Leveraged pretrained Swin Transformer backbones enhanced with EfficientNet and domain-specific transfer learning.
+* Provided a comprehensive set of pretrained checkpoints for seamless transfer learning.
+* Delivered end-to-end training and inference pipelines with extensive augmentation and customization options.
+
+---
+
+## Visual Overview
 
 <p align="center">
-<img src="images/pm1.png" width="800" />
+<img src="images/pm1.png" width="800" alt="Transformer Decoder Architecture 1" />
 </p>
 
 <p align="center">
-<img src="images/pm2.png" width="800" />
+<img src="images/pm2.png" width="800" alt="Transformer Decoder Architecture 2" />
 </p>
 
+---
 
-Updates:
+## Updates
 
-  - **October 31, 2021: Fixed a few bugs and updated all checkpoints/**
-  - **We will provide full codes after our latest article have been published.**
+* **Oct 31, 2021:** Fixed bugs and updated all pretrained checkpoints.
+* **Upcoming:** Full source code release post-publication of the latest article.
 
-## 1. Pretrained SwinTF with Decoder Designs Checkpoints
+---
 
-We have provided a list of EfficientNet checkpoints for Pretrained SwinTF with decoder designs checkpoints:.
+## 1. Pretrained Models & Checkpoints
 
-  ** All these best checkpoints are trained with HR-GCN-FF-DA network.
-  
-  - Drive (Pretrained of SwinTF-FPN for ISPRS Vaihingen): https://drive.google.com/open?id=1J7YClrBRlm9Oo8c8Xq621N_J0B_RYW2d
+Pretrained Swin Transformer (SwinTF) models integrated with decoder designs are available:
 
-  - Drive (Pretrained of SwinTF-PSP for Isan (Thailand) corpus): https://drive.google.com/open?id=1kWWoQwSZx73e_lWElNT2Yebax4xU5FmB
+* **Trained with HR-GCN-FF-DA Network**
 
-  - Drive (Pretrained of SwinTF-PSP for North (Thailand) corpus): https://drive.google.com/open?id=1WtqrrIC4-_5aQwMsUqgpjZQ3Kyk4t1PK
+| Dataset & Model                     | Download Link                                                                      |
+| ----------------------------------- | ---------------------------------------------------------------------------------- |
+| SwinTF-FPN (ISPRS Vaihingen)        | [Google Drive](https://drive.google.com/open?id=1J7YClrBRlm9Oo8c8Xq621N_J0B_RYW2d) |
+| SwinTF-PSP (Isan, Thailand Corpus)  | [Google Drive](https://drive.google.com/open?id=1kWWoQwSZx73e_lWElNT2Yebax4xU5FmB) |
+| SwinTF-PSP (North, Thailand Corpus) | [Google Drive](https://drive.google.com/open?id=1WtqrrIC4-_5aQwMsUqgpjZQ3Kyk4t1PK) |
 
+---
 
-## 2. Run inference.
-
-Files and Directories
-
-- **train.py:** Training on the dataset of your choice. Default is Landsat-8w3c
-
-- **test.py:** Testing on the dataset of your choice. Default is Landsat-8w3c
+## 2. Getting Started
 
 ### Installation
-This project has the following dependencies:
 
-- TensorFlow `sudo pip install --upgrade tensorflow-gpu`
+Ensure you have the following dependencies installed:
 
-- OpenCV Python `sudo apt-get install python-opencv`
+```bash
+pip install --upgrade tensorflow-gpu
+sudo apt-get install python-opencv
+```
 
-### Usage
-The only thing you have to do to get started is set up the folders in the following structure:
+### Directory Structure
 
-    ├── "corpus_name"                   
-    |   ├── train
-    |   ├── train_labels
-    |   ├── val
-    |   ├── val_labels
-    |   ├── test
-    |   ├── test_labels
-
-Put a text file under the dataset directory called "our_class_dict.csv" which contains the list of classes along with the R, G, B colour labels to visualize the segmentation results. This kind of dictionairy is usually supplied with the dataset. Here is an example for the Landsat-8w5c dataset:
+Organize your dataset as follows:
 
 ```
+corpus_name/
+├── train/
+├── train_labels/
+├── val/
+├── val_labels/
+├── test/
+├── test_labels/
+```
+
+Place a class-color mapping file named `our_class_dict.csv` inside your dataset folder. Example for Landsat-8w5c:
+
+```csv
 name,r,g,b
 Agriculture or Harvested area,255,255,155
 Forest,56,168,0
-Urban,255,0, 0
-Water,0, 122, 255
-Miscellaneous,183, 140, 31
+Urban,255,0,0
+Water,0,122,255
+Miscellaneous,183,140,31
 ```
 
-## 3. Results.
-**Note:** If you are using any of the networks that rely on a pretrained SwinTF, then you will need to download the pretrained weights using the provided script on section 2. These are currently: Pretrained SwinTF-PSP and Pretrained SwinTF-FPN.
+### Running Training & Inference
 
-Then you can simply run `train.py`! Check out the optional command line arguments:
+* `train.py` — Train your model on the specified dataset.
+* `test.py` — Run inference on your dataset.
+
+Command-line usage example:
+
+```bash
+python train.py --dataset your_dataset_name --num_epochs 50 --batch_size 16 --model swin_decoder --frontend swin_transformer
+```
+
+#### Command Line Arguments
 
 ```
 usage: train.py [-h] [--num_epochs NUM_EPOCHS]
                 [--checkpoint_step CHECKPOINT_STEP]
-                [--validation_step VALIDATION_STEP] [--image IMAGE]
-                [--continue_training CONTINUE_TRAINING] [--dataset DATASET]
-                [--crop_height CROP_HEIGHT] [--crop_width CROP_WIDTH]
-                [--batch_size BATCH_SIZE] [--num_val_images NUM_VAL_IMAGES]
-                [--h_flip H_FLIP] [--v_flip V_FLIP] [--brightness BRIGHTNESS]
-                [--rotation ROTATION] [--model MODEL] [--frontend FRONTEND]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  --num_epochs NUM_EPOCHS
-                        Number of epochs to train for
-  --checkpoint_step CHECKPOINT_STEP
-                        How often to save checkpoints (epochs)
-  --validation_step VALIDATION_STEP
-                        How often to perform validation (epochs)
-  --image IMAGE         The image you want to predict on. Only valid in
-                        "predict" mode.
-  --continue_training CONTINUE_TRAINING
-                        Whether to continue training from a checkpoint
-  --dataset DATASET     Dataset you are using.
-  --crop_height CROP_HEIGHT
-                        Height of cropped input image to network
-  --crop_width CROP_WIDTH
-                        Width of cropped input image to network
-  --batch_size BATCH_SIZE
-                        Number of images in each batch
-  --num_val_images NUM_VAL_IMAGES
-                        The number of images to used for validations
-  --h_flip H_FLIP       Whether to randomly flip the image horizontally for
-                        data augmentation
-  --v_flip V_FLIP       Whether to randomly flip the image vertically for data
-                        augmentation
-  --brightness BRIGHTNESS
-                        Whether to randomly change the image brightness for
-                        data augmentation. Specifies the max bightness change
-                        as a factor between 0.0 and 1.0. For example, 0.1
-                        represents a max brightness change of 10% (+-).
-  --rotation ROTATION   Whether to randomly rotate the image for data
-                        augmentation. Specifies the max rotation angle in
-                        degrees.
-  --model MODEL         The model you are using. See model_builder.py for
-                        supported models
-  --frontend FRONTEND   The frontend you are using. See frontend_builder.py
-                        for supported models
-
+                [--validation_step VALIDATION_STEP]
+                [--image IMAGE]
+                [--continue_training CONTINUE_TRAINING]
+                [--dataset DATASET]
+                [--crop_height CROP_HEIGHT]
+                [--crop_width CROP_WIDTH]
+                [--batch_size BATCH_SIZE]
+                [--num_val_images NUM_VAL_IMAGES]
+                [--h_flip H_FLIP]
+                [--v_flip V_FLIP]
+                [--brightness BRIGHTNESS]
+                [--rotation ROTATION]
+                [--model MODEL]
+                [--frontend FRONTEND]
 ```
 
-## Results
+(Refer to `train.py -h` for detailed descriptions.)
 
-These are some **sample results** for the Isan (Thailand) corpus with 3 classes 
+---
 
-<p align="center">
-<img src="images/rs_isan.png" width="800" />
-</p>
+## 3. Sample Results
 
-These are some **sample results** for the North (Thailand) corpus with 3 classes 
+### Isan (Thailand) Corpus — 3 Classes
 
 <p align="center">
-<img src="images/rs_north.png" width="800" />
+<img src="images/rs_isan.png" width="800" alt="Isan Thailand Semantic Segmentation" />
 </p>
 
-
-These are some **sample results** for the ISPRS Vaihingen with 5 classes 
+### North (Thailand) Corpus — 3 Classes
 
 <p align="center">
-<img src="images/rs_isprs.png" width="800" />
+<img src="images/rs_north.png" width="800" alt="North Thailand Semantic Segmentation" />
 </p>
 
-For more instructions about training on GPUs, please refer to the following tutorials:
+### ISPRS Vaihingen — 5 Classes
 
-  * Tensorflow tutorial: https://www.tensorflow.org/install/gpu
+<p align="center">
+<img src="images/rs_isprs.png" width="800" alt="ISPRS Vaihingen Semantic Segmentation" />
+</p>
 
-NOTE: this is still not an official code (untill we have published our article).
+---
 
-## Reference
+## Notes
 
-[1] https://github.com/microsoft/Swin-Transformer
+* If using pretrained SwinTF-based models, download the weights as described above.
+* GPU training is recommended; refer to [TensorFlow GPU Setup](https://www.tensorflow.org/install/gpu).
+* This is a research prototype; official code release will coincide with paper publication.
 
-[2] https://github.com/rishigami/Swin-Transformer-TF
+---
 
-[3] https://github.com/GeorgeSeif/Semantic-Segmentation-Suite
+## References
+
+* [Microsoft Swin Transformer](https://github.com/microsoft/Swin-Transformer)
+* [Swin Transformer TensorFlow Implementation](https://github.com/rishigami/Swin-Transformer-TF)
+* [Semantic Segmentation Suite](https://github.com/GeorgeSeif/Semantic-Segmentation-Suite)
