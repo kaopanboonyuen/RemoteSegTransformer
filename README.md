@@ -111,10 +111,10 @@ Miscellaneous,183,140,31
 * `train.py` — Train your model on the specified dataset.
 * `test.py` — Run inference on your dataset.
 
-Command-line usage example:
+**Command-line usage example:**
 
 ```bash
-python train.py --dataset your_dataset_name --num_epochs 50 --batch_size 16 --model swin_decoder --frontend swin_transformer
+python train.py --dataset your_dataset_name --num_epochs 50 --batch_size 16 --model transformer_decoder --frontend swin_transformer
 ```
 
 #### Command Line Arguments
