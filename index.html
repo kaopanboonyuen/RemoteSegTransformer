@@ -1,220 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Transformer-Based Decoder Designs for Semantic Segmentation</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='16'>🛰️</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      background: #f4f7fa;
-      color: #222;
-      animation: fadeIn 1.5s ease-in-out;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RemoteSegTransformer: PhD Thesis by Teerapong Panboonyuen</title>
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    <!-- Favicon with globe emoji -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><text y='14' font-size='16'>☄️</text></svg>" />
 
-    header {
-      background: #000;
-      color: #fff;
-      padding: 40px 20px;
-      text-align: center;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            animation: fadeIn 1.5s ease-in-out;
+            line-height: 1.6;
+        }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.4em;
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-    header p {
-      margin: 10px 0 0;
-      font-size: 1.1em;
-      color: #bbb;
-    }
+            to {
+                opacity: 1;
+            }
+        }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 40px 20px;
-    }
+       header {
+    background: linear-gradient(135deg, #1c1c1c, #3a3a3a); /* Dark Gray to Medium Gray */
+    color: white;
+    padding: 40px 20px 30px;
+    text-align: center;
+    animation: headerFadeIn 2s ease-in-out;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
 
-    section {
-      margin-bottom: 60px;
-    }
 
-    h2 {
-      color: #1d3557;
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
 
-    .text-block {
-      font-size: 1.05em;
-      line-height: 1.7;
-    }
 
-    .button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #1d3557;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 600;
-    }
+        @keyframes headerFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
 
-    .button:hover {
-      background: #457b9d;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    img {
-      width: 100%;
-      max-width: 800px;
-      display: block;
-      margin: 20px auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
+        header h1 {
+            font-size: 2.4rem;
+            margin: 0 0 10px;
+            font-weight: 600;
+        }
 
-    img:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-    }
+        header .authors {
+            font-size: 1rem;
+            color: #a8bed6;
+            margin-top: 10px;
+        }
 
-    pre {
-      background: #eee;
-      padding: 15px;
-      overflow-x: auto;
-      border-radius: 6px;
-    }
+        header .authors a {
+            color: #f1faee;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 8px;
+            transition: color 0.3s;
+        }
 
-    ul {
-      line-height: 1.8;
-    }
+        header .authors a:hover {
+            color: #e63946;
+        }
 
-    footer {
-      text-align: center;
-      background: #1d3557;
-      color: white;
-      padding: 20px;
-      font-size: 0.9em;
-    }
+        .container {
+            max-width: 900px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+        }
 
-    footer a {
-      color: #f1faee;
-      text-decoration: none;
-    }
-  </style>
+        section {
+            margin-bottom: 40px;
+            animation: sectionFadeIn 1.8s ease-in-out;
+        }
+
+        @keyframes sectionFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #1d3557;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #e63946;
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            color: #457b9d;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 22px;
+            background-color: #e63946;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        a.button:hover {
+            background-color: #f1faee;
+            color: #1d3557;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        pre {
+            background: #f1f1f1;
+            padding: 12px 18px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Images */
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(29, 53, 87, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(29, 53, 87, 0.35);
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #1d3557;
+            color: white;
+            text-align: center;
+            padding: 20px 15px;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #e63946;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        hr {
+            border: none;
+            border-top: 1.5px solid #e63946;
+            margin: 40px 0;
+            width: 50px;
+        }
+    </style>
 </head>
+
 <body>
 
-  <header>
-    <h1>Transformer-Based Decoder Designs</h1>
-    <p>Semantic Segmentation on Remotely Sensed Imagery</p>
-    <p><strong>Teerapong Panboonyuen</strong></p>
-  </header>
+    <header>
+        <h1>☄️ RemoteSegTransformer</h1>
+        <div class="authors">
+            <p>
+                <strong>Teerapong Panboonyuen</strong><br />
+                <a href="https://kaopanboonyuen.github.io/" target="_blank" rel="noopener"></a>Computer Engineering, Chulalongkorn University
+            </p>
+            <p>
+                <a class="button" href="https://digital.car.chula.ac.th/chulaetd/8534/" target="_blank" rel="noopener">Read Full Thesis PDF</a>
+                <a class="button" href="https://kaopanboonyuen.github.io/talk/ph.d.-thesis-defense/" target="_blank" rel="noopener">PhD Blog & Defense</a>
+                <a class="button" href="https://github.com/kaopanboonyuen/RemoteSegTransformer" target="_blank" rel="noopener">Source Code on GitHub</a>
+            </p>
+        </div>
+    </header>
 
-  <div class="container">
-    <section>
-      <h2>Overview</h2>
-      <div class="text-block">
-        <p>This work introduces novel decoder designs within the Transformer-based Swin architecture, tailored for semantic segmentation tasks in high-resolution remote sensing images. By enhancing global contextual understanding and preserving fine-grained spatial detail, our methods outperform conventional CNN-based decoders on multiple aerial benchmarks.</p>
-      </div>
-    </section>
+    <div class="container">
 
-    <section>
-      <h2>Architectures</h2>
-      <img src="images/pm1.png" alt="Architecture Diagram 1">
-      <img src="images/pm2.png" alt="Architecture Diagram 2">
-    </section>
+<section>
+  <h2>📚 Overview</h2>
+  <p><strong>RemoteSegTransformer</strong> is an advanced deep learning framework designed specifically for semantic segmentation of remotely sensed imagery. Leveraging a novel transformer-based decoder architecture with dynamic 2D positional encoding, this Ph.D. research introduces a powerful alternative to traditional convolutional approaches. By capturing both global context and fine-grained spatial details, it significantly enhances the precision of land cover mapping and scene understanding in satellite and aerial images—pushing the boundaries of geospatial AI research.</p>
+</section>
 
-    <section>
-      <h2>Pretrained Checkpoints</h2>
-      <ul>
-        <li><a href="https://drive.google.com/open?id=1J7YClrBRlm9Oo8c8Xq621N_J0B_RYW2d" target="_blank">SwinTF-FPN – ISPRS Vaihingen</a></li>
-        <li><a href="https://drive.google.com/open?id=1kWWoQwSZx73e_lWElNT2Yebax4xU5FmB" target="_blank">SwinTF-PSP – Isan (Thailand)</a></li>
-        <li><a href="https://drive.google.com/open?id=1WtqrrIC4-_5aQwMsUqgpjZQ3Kyk4t1PK" target="_blank">SwinTF-PSP – North (Thailand)</a></li>
-      </ul>
-    </section>
 
-    <section>
-      <h2>Dataset Structure</h2>
-      <pre>
-corpus_name/
-├── train/
-├── train_labels/
-├── val/
-├── val_labels/
-├── test/
-├── test_labels/
-      </pre>
-      <p>Include <code>our_class_dict.csv</code> to map class names to RGB colors.</p>
-      <pre>
-name,r,g,b
-Agriculture,255,255,155
-Forest,56,168,0
-Urban,255,0,0
-Water,0,122,255
-Miscellaneous,183,140,31
-      </pre>
-    </section>
 
-    <section>
-      <h2>Sample Results</h2>
-      <img src="images/rs_isan.png" alt="Result Isan">
-      <img src="images/rs_north.png" alt="Result North">
-      <img src="images/rs_isprs.png" alt="Result ISPRS Vaihingen">
-    </section>
+       <section>
+    <h2>🎓 Academic Excellence & Scholarships</h2>
+    <p>
+        I have completed my <strong>Ph.D. in Computer Engineering</strong> at Chulalongkorn University (2018–2020), proudly supported by these prestigious scholarships:
+    </p>
+    <ul>
+        <li><strong>The 100th Anniversary Chulalongkorn University Fund for Doctoral Scholarship</strong></li>
+        <li><strong>The 90th Anniversary of Chulalongkorn University Scholarship</strong></li>
+    </ul>
+    <p>
+        I also completed my <strong>Master of Engineering in Computer Engineering</strong> degree (2016–2017), supported by 
+    </p>
+    <ul>
+        <li><strong>The H.M. the King Bhumibhol Adulyadej’s 72nd Birthday Anniversary Scholarship</strong></li>
+    </ul>
 
-    <section>
-      <h2>Installation & Usage</h2>
-      <pre>
-# Install dependencies
-pip install tensorflow opencv-python
+    <h3>📚 Thesis Works</h3>
+    <p>
+        <a class="button" href="https://digital.car.chula.ac.th/chulaetd/8534/" target="_blank" rel="noopener" style="margin-right:10px;">
+            View Ph.D. Thesis
+        </a>
+        <a class="button" href="https://www.car.chula.ac.th/display7.php?bib=2156287" target="_blank" rel="noopener">
+            View M.Eng. Thesis
+        </a>
+    </p>
 
-# Train model
-python train.py --dataset corpus_name --model swin_decoder
+    <h3>📝 Selected Publications</h3>
+    <ul>
+        <li>
+            Panboonyuen, T., et al., <em>Transformer-Based Decoder Designs for Semantic Segmentation on Remotely Sensed Images</em>, Remote Sensing, 2021.  
+            <a class="button" href="https://www.mdpi.com/2072-4292/13/24/5100" target="_blank" rel="noopener" style="font-size:0.9rem; padding:5px 12px; margin-left:10px;">Read Paper</a>
+        </li>
+        <li>
+            Panboonyuen, T., et al., <em>Feature Fusion-Based Enhanced Global Convolutional Network with Channel Attention for Remote Sensing</em>, Remote Sensing, 2020.  
+            <a class="button" href="https://www.mdpi.com/2072-4292/12/8/1233" target="_blank" rel="noopener" style="font-size:0.9rem; padding:5px 12px; margin-left:10px;">Read Paper</a>
+        </li>
+        <li>
+            Panboonyuen, T., et al., <em>Road Segmentation on Aerial Imagery Using Deep CNNs and Conditional Random Fields</em>, Remote Sensing, 2017.  
+            <a class="button" href="https://www.mdpi.com/2072-4292/9/7/680" target="_blank" rel="noopener" style="font-size:0.9rem; padding:5px 12px; margin-left:10px;">Read Paper</a>
+        </li>
+    </ul>
 
-# Test model
-python test.py --dataset corpus_name
-      </pre>
-      <a href="https://www.tensorflow.org/install/gpu" class="button" target="_blank">TensorFlow GPU Setup</a>
-    </section>
+    <p>
+        My research advances state-of-the-art semantic segmentation for remote sensing imagery, combining novel neural architectures, attention mechanisms, and domain-specific transfer learning — with applications in smart cities, environmental monitoring, and geospatial intelligence.
+    </p>
+</section>
 
-    <section>
-      <h2>Related Publications</h2>
-      <ul>
-        <li><a href="https://doi.org/10.3390/rs12081233" target="_blank">Feature Fusion + Depthwise Atrous Convolution (Remote Sens, 2020)</a></li>
-        <li><a href="https://doi.org/10.3390/rs11010083" target="_blank">GloConvNet + Channel Attention (Remote Sens, 2019)</a></li>
-        <li><a href="https://doi.org/10.3390/rs9070680" target="_blank">Road Segmentation with CRFs (Remote Sens, 2017)</a></li>
-      </ul>
-    </section>
 
-    <section>
-      <h2>Citation</h2>
-      <pre>
-@article{panboonyuen2025transformer,
-  title={Transformer-Based Decoder Designs for Semantic Segmentation on Remotely Sensed Images},
-  author={Panboonyuen, Teerapong},
-  journal={Remote Sensing Letters},
-  year={2025},
-  note={Under review}
-}
-      </pre>
-    </section>
 
-  </div>
+        <section>
+            <h2>📄 Abstract</h2>
+            <p>Semantic segmentation plays a crucial role in remote sensing, impacting fields such as agriculture, map updating, and navigation.</p>
+            <p>While Deep Convolutional Encoder-Decoder networks are widely used, they often struggle to accurately identify fine low-level features such as rivers and vegetation due to architectural limits and scarcity of domain-specific training data.</p>
+            <p>This dissertation proposes an advanced semantic segmentation framework designed specifically for remote sensing imagery, featuring five key innovations:</p>
+            <ul>
+                <li><strong>Global Convolutional Network (GCN):</strong> Enhances segmentation accuracy for remote sensing images.</li>
+                <li><strong>Channel Attention Mechanism:</strong> Focuses on the most critical features for better performance.</li>
+                <li><strong>Domain-Specific Transfer Learning:</strong> Addresses limited training data challenges.</li>
+                <li><strong>Feature Fusion (FF):</strong> Integrates low-level features effectively.</li>
+                <li><strong>Depthwise Atrous Convolution (DA):</strong> Refines feature extraction for improved segmentation.</li>
+            </ul>
+            <p>Experiments on Landsat-8 datasets and the ISPRS Vaihingen benchmark demonstrate significant performance improvements over baseline models.</p>
+        </section>
 
-  <footer>
-    &copy; 2025 Teerapong Panboonyuen · <a href="mailto:panboonyuen.kao@gmail.com">Contact</a>
-  </footer>
+      <section>
+          <h2>📁 Key Resources & Publications</h2>
+          <p>Explore the core assets underpinning my research and contributions to the field of semantic segmentation on remote sensing imagery:</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px;">
+              <a class="button" href="https://digital.car.chula.ac.th/chulaetd/8534/" target="_blank" rel="noopener" style="flex: 1 1 250px; text-align: center;">
+                  📄 Ph.D. Thesis PDF
+              </a>
+              <a class="button" href="https://kaopanboonyuen.github.io/talk/ph.d.-thesis-defense/" target="_blank" rel="noopener" style="flex: 1 1 250px; text-align: center;">
+                  📝 PhD Blog & Defense
+              </a>
+              <a class="button" href="https://github.com/kaopanboonyuen/RemoteSegTransformer" target="_blank" rel="noopener" style="flex: 1 1 250px; text-align: center;">
+                  💻 GitHub Code Repository
+              </a>
+              <a class="button" href="https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-vaihingen.aspx" target="_blank" rel="noopener" style="flex: 1 1 250px; text-align: center;">
+                  📊 ISPRS Vaihingen Dataset
+              </a>
+              <a class="button" href="https://www.isprs.org/resources/datasets/benchmarks/UrbanSemLab/2d-sem-label-vaihingen.aspx" target="_blank" rel="noopener" style="flex: 1 1 250px; text-align: center;">
+                  🏆 ISPRS Vaihingen Leaderboard
+              </a>
+          </div>
+          <p style="margin-top: 20px; font-style: italic; color: #555;">
+              These resources highlight the rigor, reproducibility, and impact of my work within the computer vision and remote sensing communities.
+          </p>
+      </section>
+
+
+        <section>
+            <h2>🔧 How to Use</h2>
+
+            <h3>Training</h3>
+            <p>Clone the repository and install dependencies:</p>
+            <pre><code>git clone https://github.com/kaopanboonyuen/RemoteSegTransformer.git
+cd RemoteSegTransformer
+pip install -r requirements.txt
+</code></pre>
+            <p>Prepare your dataset and modify <code>config.json</code> as needed, then start training:</p>
+            <pre><code>python src/train.py --config config.json</code></pre>
+
+            <h3>Inference</h3>
+            <p>Download pretrained models from the repository and run inference:</p>
+            <pre><code>python src/inference.py --model path_to_pretrained_model --image path_to_image</code></pre>
+        </section>
+
+        <section>
+            <h2>📝 Citation</h2>
+            <p>If you use this work in your research, please cite:</p>
+            <pre><code>@phdthesis{panboonyuen2019semantic,
+  title     = {Semantic segmentation on remotely sensed images using deep convolutional encoder-decoder neural network},
+  author    = {Teerapong Panboonyuen},
+  year      = {2019},
+  school    = {Chulalongkorn University},
+  type      = {Ph.D. thesis},
+  doi       = {10.58837/CHULA.THE.2019.158},
+  address   = {Faculty of Engineering},
+  note      = {Doctor of Philosophy}
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>📸 Visual Results</h2>
+            <p>Some highlights of our model's performance:</p>
+            <img src="img/GraphicalAbstract.png" alt="Graphical Abstract" />
+            <img src="img/p2_method_2.png" alt="Method Illustration 2" />
+            <img src="img/p3_method_3.png" alt="Method Illustration 3" />
+            <p>
+              <img src="img/out3.png" alt="Sample Output 1"  />
+              <img src="img/out1.png" alt="Sample Output 2" />
+              <img src="img/out5.png" alt="Sample Output 3" />
+            </p>
+        </section>
+
+        <section>
+  <h2>🚀 What I Do & My Impact</h2>
+  <p>
+    I build cutting-edge deep learning models for semantic segmentation of aerial and satellite images — helping computers understand complex scenes like roads, vegetation, and buildings with high precision.
+  </p>
+  <p>
+    My latest work improves on state-of-the-art by:
+  </p>
+  <ul>
+    <li><strong>High-Resolution Backbone:</strong> Keeps detailed image features at multiple scales.</li>
+    <li><strong>Feature Fusion:</strong> Combines local & global info for better accuracy.</li>
+    <li><strong>Depthwise Atrous Convolution:</strong> Smart multi-scale filtering to capture fine details.</li>
+  </ul>
+  <p>
+    Tested on top benchmarks (ISPRS Vaihingen, Landsat-8), my model scores 90%+ F1 — outperforming previous bests and powering smarter remote sensing applications.
+  </p>
+
+</section>
+
+
+        <section>
+            <h2>⚖️ License</h2>
+            <p>This project is licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT License</a>.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>
+            &copy; 2019 Teerapong Panboonyuen &mdash; 
+            <a href="https://digital.car.chula.ac.th/chulaetd/8534/" target="_blank" rel="noopener">PhD Thesis</a>
+        </p>
+    </footer>
 
 </body>
+
 </html>
